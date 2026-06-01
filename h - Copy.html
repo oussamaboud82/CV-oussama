@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منشئ السيرة الذاتية الاحترافي | CV Generator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Inter:wght@400;500;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --font-ar: 'Tajawal', sans-serif;
+            --font-en: 'Inter', sans-serif;
+            --blue-line: #a4c2f4; /* لون الخطوط الفاصلة في التصميم */
+            --blue-box: #5b9bd5;  /* لون مربع الصورة */
+        }
+
+        body {
+            background-color: #f0f2f5;
+            color: #000;
+            padding: 30px 20px;
+            font-family: var(--font-en);
+        }
+
+        html[dir="rtl"] body {
+            font-family: var(--font-ar);
+        }
+
+        .container {
+            display: flex;
+            max-width: 1300px;
+            margin: 0 auto;
+            gap: 30px;
+        }
+
+        /* --- لوحة تحكم المدخلات (تختفي عند الطباعة) --- */
+        .form-section {
+            flex: 0.8;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+
+        .lang-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+        }
+
+        .lang-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .lang-btn.active {
+            background: #0f172a;
+            color: #fff;
+            border-color: #0f172a;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-section textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background-color: #f8fafc;
+        }
+
+        .actions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .print-btn {
+            width: 100%;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* --- تصميم الـ CV المتطابق مع sd.PNG --- */
+        .preview-section {
+            flex: 1.2;
+            background: #fff;
+            padding: 50px 50px;
+            min-height: 297mm;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        /* الهيدر: الاسم على اليسار والصورة على اليمين */
+        .cv-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .header-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .preview-name {
+            font-size: 2rem;
+            font-weight: 500;
+            color: #000;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .contact-item {
+            font-size: 1.05rem;
+            color: #000;
+            line-height: 1.4;
+        }
+
+        /* مربع الصورة الأزرق المستطيل كالموجود في الصورة تماماً */
+        .photo-container {
+            width: 160px;
+            height: 190px;
+            background-color: var(--blue-box);
+            border: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-placeholder {
+            font-size: 0.9rem;
+            color: #fff;
+            text-align: center;
+        }
+
+        /* الخطوط الأفقية الفاصلة المتطابقة */
+        .divider-line {
+            width: 100%;
+            height: 2px;
+            background-color: var(--blue-line);
+            margin: 15px 0;
+        }
+
+        /* إطار الملخص المهني */
+        .about-box {
+            border: 1px solid #000;
+            padding: 15px;
+            margin: 10px 0;
+            background: #fff;
+        }
+
+        .about-box p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #000;
+            text-align: justify;
+        }
+
+        /* تنسيق أقسام التعليم والخبرة */
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #000;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .data-row {
+            display: flex;
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+        }
+
+        .data-year {
+            width: 25%;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .data-text {
+            width: 75%;
+            font-weight: 700;
+            color: #000;
+        }
+
+        /* قسم اللغات والاعلام الآلي الممركز */
+        .lang-section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #000;
+            text-align: center;
+            margin-top: 25px;
+            margin-bottom: 25px;
+        }
+
+        .skills-table {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .skill-row {
+            display: flex;
+            font-size: 1.05rem;
+        }
+
+        .skill-name {
+            width: 25%;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .skill-desc {
+            width: 75%;
+            font-weight: 700;
+            color: #000;
+        }
+
+        /* إعدادات الطباعة لإخفاء لوحة التحكم والحفاظ على الهيكل الدقيق */
+        @media print {
+            body { background: none; padding: 0; }
+            .no-print { display: none !important; }
+            .preview-section { box-shadow: none; padding: 40px; width: 100%; min-height: 100vh; }
+            .container { display: block; }
+            .photo-container { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .divider-line { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- لوحة التحكم الجانبية (تختفي عند الطباعة) -->
+        <div class="form-section no-print">
+            <div class="lang-selector">
+                <button class="lang-btn" onclick="setLanguage('ar')">العربية</button>
+                <button class="lang-btn" onclick="setLanguage('en')">English</button>
+                <button class="lang-btn active" onclick="setLanguage('fr')">Français</button>
+            </div>
+
+            <h2 id="form-heading">📝 Informations du CV</h2>
+            
+            <form id="cv-form">
+                <div class="form-group">
+                    <label for="input-photo">Photo de profil / الصورة الشخصية:</label>
+                    <input type="file" id="input-photo" accept="image/*" onchange="previewImage(event)">
+                </div>
+                <div class="form-group">
+                    <label id="lbl-name" for="input-name">Nom Complet:</label>
+                    <input type="text" id="input-name" value="FR KAWTHER">
+                </div>
+                <div class="form-group">
+                    <label id="lbl-email" for="input-email">E-mail:</label>
+                    <input type="email" id="input-email" value="kawtharhadil3@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label id="lbl-phone" for="input-phone">Téléphone:</label>
+                    <input type="tel" id="input-phone" value="05419">
+                </div>
+                <div class="form-group">
+                    <label id="lbl-address" for="input-address">Adresse:</label>
+                    <input type="text" id="input-address" value="83 Alger">
+                </div>
+                <div class="form-group">
+                    <label id="lbl-about" for="input-about">Résumé Professionnel:</label>
+                    <textarea id="input-about" rows="6">Je maîtrise les tâches administratives telles que la gestion des dossiers, l'organisation des documents, l'accueil et l'orientation des clients, ainsi que le respect des procédures administratives et bancaires. Je possède également de bonnes capacités de communication, un sens de l'organisation et une grande rigueur dans le travail. Grâce à ma formation en droit, je suis capable de travailler avec sérieux, discrétion et responsabilité dans un environnement administratif et bancaire.</textarea>
+                </div>
+                <div class="form-group">
+                    <label id="lbl-education" for="input-education">Éducation / Formation:</label>
+                    <textarea id="input-education" rows="2">2022-2025|Licence en Droit Public – Université Alger 1 (3ans)</textarea>
+                </div>
+                <div class="form-group">
+                    <label id="lbl-experience" for="input-experience">Expérience:</label>
+                    <textarea id="input-experience" rows="3">2025|Formation Banque et Assurance -– Institut URPSI, Cheraga&#10;2026|Stage en Banque BDL AGENCE 113  DELY IBRAHIM</textarea>
+                </div>
+                <div class="form-group">
+                    <label id="lbl-skills" for="input-skills">Langues & Informatique:</label>
+                    <textarea id="input-skills" rows="4">Arabe|Langue maternelle&#10;Anglais|Intermédiaire&#10;Français|Bon niveau&#10;Bureautique|Maitrise de la suite MS Office (Word, Excel)</textarea>
+                </div>
+
+                <div class="actions-container">
+                    <button type="button" onclick="window.print()" class="print-btn" id="lbl-print-btn">🖨️ Imprimer / Enregistrer en PDF</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- قسم المعاينة الحية للـ CV (طراز ملف sd.PNG) -->
+        <div class="preview-section" id="cv-preview">
+            
+            <!-- الهيدر العلوي -->
+            <div class="cv-header">
+                <div class="header-info">
+                    <h1 class="preview-name" id="preview-name">FR KAWTHER</h1>
+                    <div class="contact-item" id="preview-email">Email : kawtharhadil3@gmail.com</div>
+                    <div class="contact-item" id="preview-phone">Numéro : 05419</div>
+                    <div class="contact-item" id="preview-address">Adresse : 83 Alger</div>
+                </div>
+                <!-- مربع الصورة المتطابق -->
+                <div class="photo-container" onclick="document.getElementById('input-photo').click()">
+                    <div class="photo-placeholder" id="photo-text">مكان الصورة</div>
+                    <img id="photo-preview" src="" alt="Profile" style="display: none;">
+                </div>
+            </div>
+
+            <div class="divider-line"></div>
+
+            <!-- مربع الملخص المهني المحاط بإطار -->
+            <div class="about-box">
+                <p id="preview-about">Je maîtrise les tâches administratives telles que la gestion des dossiers, l'organisation des documents, l'accueil et l'orientation des clients, ainsi que le respect des procédures administratives et bancaires. Je possède également de bonnes capacités de communication, un sens de l'organisation et une grande rigueur dans le travail. Grâce à ma formation en droit, je suis capable de travailler avec sérieux, discrétion et responsabilité dans un environnement administratif et bancaire.</p>
+            </div>
+
+            <div class="divider-line"></div>
+
+            <!-- قسم التعليم -->
+            <div class="section-title" id="view-title-education">ÉDUCATION</div>
+            <div id="container-education">
+                <div class="data-row">
+                    <div class="data-year">2022-2025</div>
+                    <div class="data-text">Licence en Droit Public – Université Alger 1 (3ans)</div>
+                </div>
+            </div>
+
+            <!-- قسم الخبرة -->
+            <div class="section-title" id="view-title-experience">EXPÉRIENCE</div>
+            <div id="container-experience" style="margin-bottom: 15px;">
+                <div class="data-row">
+                    <div class="data-year">2025</div>
+                    <div class="data-text">Formation Banque et Assurance -– Institut URPSI, Cheraga</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-year">2026</div>
+                    <div class="data-text">Stage en Banque BDL AGENCE 113  DELY IBRAHIM</div>
+                </div>
+            </div>
+
+            <div class="divider-line"></div>
+
+            <!-- قسم اللغات والإعلام الآلي -->
+            <div class="lang-section-title" id="view-title-skills">Langues & Informatique</div>
+            <div id="container-skills" class="skills-table">
+                <div class="skill-row">
+                    <div class="skill-name">Arabe</div>
+                    <div class="skill-desc">Langue maternelle</div>
+                </div>
+                <div class="skill-row">
+                    <div class="skill-name">Anglais</div>
+                    <div class="skill-desc">Intermédiaire</div>
+                </div>
+                <div class="skill-row">
+                    <div class="skill-name">Français</div>
+                    <div class="skill-desc">Bon niveau</div>
+                </div>
+                <div class="skill-row">
+                    <div class="skill-name">Bureautique</div>
+                    <div class="skill-desc">Maitrise de la suite MS Office (Word, Excel)</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let currentLang = 'fr';
+
+        const translations = {
+            ar: {
+                formHeading: "📝 بيانات السيرة الذاتية",
+                lblName: "الاسم الكامل:", lblEmail: "البريد الإلكتروني:", lblPhone: "رقم الهاتف:", lblAddress: "العنوان:", lblAbout: "الملخص المهني:", lblEducation: "التعليم (استخدم | للفصل):", lblExperience: "الخبرة (استخدم | للفصل):", lblSkills: "اللغات والمعلوماتية (استخدم |):", lblPrint: "🖨️ طباعة أو حفظ كـ PDF",
+                viewEducation: "التعليم", viewExperience: "الخبرة", viewSkills: "اللغات & الإعلام الآلي"
+            },
+            en: {
+                formHeading: "📝 CV Information Input",
+                lblName: "Full Name:", lblEmail: "Email:", lblPhone: "Phone:", lblAddress: "Address:", lblAbout: "Summary:", lblEducation: "Education (Use | to split):", lblExperience: "Experience (Use | to split):", lblSkills: "Skills & Languages (Use |):", lblPrint: "🖨️ Print or Save as PDF",
+                viewEducation: "EDUCATION", viewExperience: "EXPÉRIENCE", viewSkills: "Langues & Informatique"
+            },
+            fr: {
+                formHeading: "📝 Informations du CV",
+                lblName: "Nom Complet:", lblEmail: "E-mail:", lblPhone: "Téléphone:", lblAddress: "Adresse:", lblAbout: "Résumé Professionnel:", lblEducation: "Éducation (Utilisez | pour séparer):", lblExperience: "Expérience (Utilisez | pour séparer):", lblSkills: "Langues & Informatique (Utilisez |):", lblPrint: "🖨️ Imprimer ou Enregistrer en PDF",
+                viewEducation: "ÉDUCATION", viewExperience: "EXPÉRIENCE", viewSkills: "Langues & Informatique"
+            }
+        };
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const data = translations[lang];
+            
+            document.getElementById('form-heading').innerText = data.formHeading;
+            document.getElementById('lbl-name').innerText = data.lblName;
+            document.getElementById('lbl-email').innerText = data.lblEmail;
+            document.getElementById('lbl-phone').innerText = data.lblPhone;
+            document.getElementById('lbl-address').innerText = data.lblAddress;
+            document.getElementById('lbl-about').innerText = data.lblAbout;
+            document.getElementById('lbl-education').innerText = data.lblEducation;
+            document.getElementById('lbl-experience').innerText = data.lblExperience;
+            document.getElementById('lbl-skills').innerText = data.lblSkills;
+            document.getElementById('lbl-print-btn').innerText = data.lblPrint;
+
+            document.getElementById('view-title-education').innerText = data.viewEducation;
+            document.getElementById('view-title-experience').innerText = data.viewExperience;
+            document.getElementById('view-title-skills').innerText = data.viewSkills;
+        }
+
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                const output = document.getElementById('photo-preview');
+                const text = document.getElementById('photo-text');
+                output.src = reader.result;
+                output.style.display = 'block';
+                text.style.display = 'none';
+            };
+            if(event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+
+        // منطق التحديث الفوري للنصوص الحرة
+        document.getElementById('input-name').addEventListener('input', e => document.getElementById('preview-name').innerText = e.target.value.trim() || "FR KAWTHER");
+        document.getElementById('input-email').addEventListener('input', e => document.getElementById('preview-email').innerText = "Email : " + (e.target.value.trim() || "kawtharhadil3@gmail.com"));
+        document.getElementById('input-phone').addEventListener('input', e => document.getElementById('preview-phone').innerText = "Numéro : " + (e.target.value.trim() || "05419"));
+        document.getElementById('input-address').addEventListener('input', e => document.getElementById('preview-address').innerText = "Adresse : " + (e.target.value.trim() || "83 Alger"));
+        document.getElementById('input-about').addEventListener('input', e => document.getElementById('preview-about').innerText = e.target.value.trim() || "...");
+
+        // تحديث الأقسام المنظمة التي تعتمد على سطر جديد وفصل بالرمز | لإنشاء التصميم الموازي تماماً
+        function parseMultiLineSection(inputId, containerId, rowClass, leftClass, rightClass) {
+            document.getElementById(inputId).addEventListener('input', (e) => {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                const lines = e.target.value.split('\n');
+                
+                lines.forEach(line => {
+                    if(line.trim() !== "") {
+                        const parts = line.split('|');
+                        const row = document.createElement('div');
+                        row.className = rowClass;
+                        
+                        const left = document.createElement('div');
+                        left.className = leftClass;
+                        left.innerText = parts[0] ? parts[0].trim() : "";
+                        
+                        const right = document.createElement('div');
+                        right.className = rightClass;
+                        right.innerText = parts[1] ? parts[1].trim() : "";
+                        
+                        row.appendChild(left);
+                        row.appendChild(right);
+                        container.appendChild(row);
+                    }
+                });
+            });
+        }
+
+        parseMultiLineSection('input-education', 'container-education', 'data-row', 'data-year', 'data-text');
+        parseMultiLineSection('input-experience', 'container-experience', 'data-row', 'data-year', 'data-text');
+        parseMultiLineSection('input-skills', 'container-skills', 'skill-row', 'skill-name', 'skill-desc');
+    </script>
+</body>
+</html>
